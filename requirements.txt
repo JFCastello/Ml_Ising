@@ -1,1 +1,18 @@
-streamlit
+# Streamlit dashboard
+streamlit==1.57.0
+
+# Data and analysis
+numpy==2.4.3
+pandas>=2.2
+matplotlib==3.9.1
+scipy==1.17.1
+seaborn>=0.13
+
+# Machine learning
+scikit-learn==1.8.0
+torch==2.5.1
+torcheval==0.0.7
+
+# Notebook execution pipeline
+nbconvert>=7.0
+jupyter>=1.0

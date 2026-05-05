@@ -1,4 +1,4 @@
-# Makefile robusto y simple
+# Simple and robust Makefile
 CXX      := g++
 MPICXX   := mpicxx
 CXXSTD   := c++17
@@ -6,58 +6,57 @@ CXXFLAGS := -std=$(CXXSTD) -O2 -Wall -Wextra -Iinclude
 SRC_DIR  := src
 OBJ_DIR  := build
 
-# Posibles archivos MPI dentro de src/
+# Possible MPI source files inside src/
 MPI_CANDIDATES := $(SRC_DIR)/All_Configurations.cpp $(SRC_DIR)/All_configurations.cpp
 MPI_SRC := $(wildcard $(MPI_CANDIDATES))
 
-# main.cpp en la raíz (si existe)
+# main.cpp at the root (if it exists)
 ROOT_MAIN := $(wildcard main.cpp)
 
-# Fuentes normales: main.cpp (si existe) + todos los src/*.cpp menos los MPI_SRC
+# Normal sources: main.cpp (if present) + all src/*.cpp except MPI sources
 NORMAL_SRCS := $(ROOT_MAIN) $(filter-out $(MPI_SRC),$(wildcard $(SRC_DIR)/*.cpp))
 
-# Objetos: build/<basename>.o (usa notdir para evitar rutas en el nombre)
+# Objects: build/<basename>.o (notdir avoids path in object name)
 OBJS := $(addprefix $(OBJ_DIR)/,$(patsubst %.cpp,%.o,$(notdir $(NORMAL_SRCS))))
 
-# Ejecutable final (en la raíz, porque main.cpp está en la raíz)
+# Final executable (at root, because main.cpp lives there)
 TARGET := main
 
-# Ejecutables MPI con sufijo _mpi en src/
+# MPI executables with _mpi suffix, placed in src/
 MPI_PROGS := $(patsubst $(SRC_DIR)/%.cpp,$(SRC_DIR)/%_mpi,$(MPI_SRC))
 
 .PHONY: all mpi clean
 
 all: $(TARGET)
-	@echo "Compilación completa."
+	@echo "Build complete."
 
-# Linkear el ejecutable principal a partir de todos los objetos
+# Link the main executable from all object files
 $(TARGET): $(OBJS)
-	@echo "Linkeando $@"
+	@echo "Linking $@"
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-# Regla genérica para compilar cualquier build/<basename>.o
-# Busca el .cpp correspondiente primero en src/, luego en la raíz.
+# Generic rule to compile any build/<basename>.o
+# Looks for the matching .cpp first in src/, then at the root.
 $(OBJ_DIR)/%.o:
 	@mkdir -p $(OBJ_DIR)
-	@echo "Compilando objeto $@"
+	@echo "Compiling $@"
 	@if [ -f "$(SRC_DIR)/$*.cpp" ]; then SRC="$(SRC_DIR)/$*.cpp"; \
 	elif [ -f "$*.cpp" ]; then SRC="$*.cpp"; \
-	else echo "ERROR: no se encontró fuente para $*"; exit 1; fi; \
+	else echo "ERROR: source not found for $*"; exit 1; fi; \
 	$(CXX) $(CXXFLAGS) -c $$SRC -o $@
 
-# Target para compilar todos los MPI sources (si existen)
+# Target to build all MPI sources (if any exist)
 mpi: $(MPI_PROGS)
-	@echo "Compilación MPI completa."
+	@echo "MPI build complete."
 
 $(SRC_DIR)/%_mpi: $(SRC_DIR)/%.cpp
-	@echo "Compilando (MPI) $< -> $@"
+	@echo "Compiling (MPI) $< -> $@"
 	$(MPICXX) -std=$(CXXSTD) -O2 -Wall -Wextra -Iinclude -o $@ $<
 
 clean:
-	@echo "Limpiando build, ejecutables y archivos .txt..."
+	@echo "Cleaning build artifacts, executables, and .txt data files..."
 	-rm -rf $(OBJ_DIR)
 	-rm -f $(TARGET) $(MPI_PROGS)
 	# delete generated data .txt files (but not requirements.txt or docs)
 	-find ./data -type f -name '*.txt' -print -exec rm -f {} +
-	@echo "Limpieza completa."
-
+	@echo "Clean complete."
