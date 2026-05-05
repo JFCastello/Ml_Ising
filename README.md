@@ -26,8 +26,11 @@ Steps 2–3 are executed automatically by `./main`. All output plots are saved t
 ### 1. Install Python dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-full.txt
 ```
+
+> `requirements.txt` contains only `streamlit` for Streamlit Cloud deployment.
+> Use `requirements-full.txt` to install the full pipeline (PyTorch, scikit-learn, etc.).
 
 ### 2. Compile
 
