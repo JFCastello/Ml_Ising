@@ -57,7 +57,7 @@ clean:
 	@echo "Limpiando build, ejecutables y archivos .txt..."
 	-rm -rf $(OBJ_DIR)
 	-rm -f $(TARGET) $(MPI_PROGS)
-	# borrar todos los .txt en todo el árbol del proyecto (recursivo)
-	-find . -type f -name '*.txt' -print -exec rm -f {} +
+	# delete generated data .txt files (but not requirements.txt or docs)
+	-find ./data -type f -name '*.txt' -print -exec rm -f {} +
 	@echo "Limpieza completa."
 

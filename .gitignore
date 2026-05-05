@@ -2,7 +2,8 @@ build/
 main
 *.o
 Data/
+data/*.txt
 __pycache__/
 .ipynb_checkpoints/
 .vscode/
-.Ds_Store
+.DS_Store

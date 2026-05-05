@@ -125,10 +125,10 @@ L(L) , N(L*L) , Num_Samples(Num_Samples)
 void Samples::Generate(double T ,  double Tc_seed) {
     // Crear la carpeta Data de manera portable
     #ifdef _WIN32
-        system("mkdir Data 2>nul || echo > nul");
+        system("mkdir data 2>nul || echo > nul");
     #else
-        int result = system("mkdir -p Data");
-        (void)result; // Suprimir el warning de unused result
+        int result = system("mkdir -p data");
+        (void)result;
     #endif
 
     // Parametros del algoritmo de Metropolis
@@ -158,14 +158,20 @@ void Samples::Generate(double T ,  double Tc_seed) {
             current_state.flip(index);
         }
     }
-    
-    // Muestreo de estados
-    std::string dataset_file = "Data/Dataset" + std::to_string(T) +  ".txt";
-    std::string output_file = "Data/Ising" + std::to_string(L) + "_T" + std::to_string(T) + "_Samples.txt";
 
+    // format T with 3 decimals
+    std::ostringstream t_stream;
+    t_stream << std::fixed << std::setprecision(3) << T;
+    std::string T_str = t_stream.str();
+
+    // filenames
+    std::string dataset_file = "data/Dataset" + T_str + ".txt";
+    std::string output_file  = "data/Ising" + std::to_string(L) + "_T" + T_str + "_Samples.txt";
+
+    // streams
     std::ofstream outfile(output_file);
     std::ofstream outfile2(dataset_file);
-
+    
     for (int sample = 0; sample < Num_Samples; ++sample) {
         // reducir correlaciones
         for (int step = 0; step < steps_between_samples; ++step) {
