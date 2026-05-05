@@ -4,6 +4,8 @@ A reproduction of [Carrasquilla & Melko (2017)](https://arxiv.org/abs/1605.01735
 a neural network learns to identify the ferromagnetic phase transition of the 2D Ising
 model using only raw spin configurations, with no prior physics knowledge.
 
+**Live dashboard:** [mlising-elsmpmflvraqc6n2rv9jas.streamlit.app](https://mlising-elsmpmflvraqc6n2rv9jas.streamlit.app/)
+
 ---
 
 ## What it does
